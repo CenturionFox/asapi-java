@@ -22,6 +22,9 @@ import com.attributestudios.api.util.logging.SimpleLogFormatter;
  */
 public class ZippingUtils
 {
+	/**
+	 * Main logger for the ZippingUtils class.
+	 */
 	private static Logger zipLogger = LoggingUtil.constructLogger("Zip / Unzip", new SimpleLogFormatter());
 	
 	/**

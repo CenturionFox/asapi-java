@@ -15,7 +15,10 @@ import java.util.logging.LogRecord;
  */
 public class SimpleLogFormatter extends Formatter
 {
-	public static DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+	/**
+	 * Date formatter used to format the date in basic ISO 8601 format..
+	 */
+	public static DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSSXXX");
 
 	/**
 	 * Formats the specified log record in a simplified

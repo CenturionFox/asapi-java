@@ -59,6 +59,8 @@ public class HashUtils
 	 */
 	public static String hashAs(String toHash, HashingType hashType) throws IOException
 	{
+		hashLog.finest("Hashing string " + toHash + " as " + hashType.getHashType());
+		
 		try(BufferedInputStream sread = new BufferedInputStream(new ByteArrayInputStream(toHash.getBytes("UTF-8"))))
 		{
 			return hashAs(sread, hashType);
@@ -79,6 +81,8 @@ public class HashUtils
 	 */
 	public static String hashAs(File toHash, HashingType hashType) throws IOException
 	{
+		hashLog.finest("Hashing file " + toHash.getAbsolutePath() + " as " + hashType.getHashType());
+		
 		try(BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(toHash)))
 		{
 			return hashAs(inputStream, hashType);
@@ -100,7 +104,7 @@ public class HashUtils
 	{
 		try
 		{
-			MessageDigest md = MessageDigest.getInstance(hashType.hashType);
+			MessageDigest md = MessageDigest.getInstance(hashType.getHashType());
 			
 			byte[] buffer = new byte[256];
 			
