@@ -76,7 +76,7 @@ public class Localizer extends ConfigurationLoader
 	 * @return Whether or not the initialization was successful.
 	 * @since 1.1.0
 	 */
-	public boolean  initialize()
+	public boolean initialize()
 	{
 		boolean flag = super.initialize();
 		

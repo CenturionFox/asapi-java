@@ -156,9 +156,10 @@ public class ConfigurationLoader
 			// Sorry, but we couldn't localize the file, probably due to a malformed key.
 			//    Prints a stack trace and quietly fails.
 			LoggingUtil.writeStackTraceToLogger(this.genericLogger, 
-												e,
-												"Unable to initialize:",
-												Level.SEVERE);
+				e,
+				"Unable to initialize:",
+				Level.SEVERE);
+			
 			return false;
 		}
 		
@@ -231,7 +232,10 @@ public class ConfigurationLoader
 			return ret;
 		} catch (Exception e)
 		{
-			LoggingUtil.writeStackTraceToLogger(this.genericLogger, e, "Unable to get property value:", Level.WARNING);
+			LoggingUtil.writeStackTraceToLogger(this.genericLogger, 
+				e, 
+				"Unable to get property value:", 
+				Level.WARNING);
 			return defaultValue;
 		}
 	}
