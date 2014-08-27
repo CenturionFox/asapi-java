@@ -47,8 +47,7 @@ public class ZippingUtils
 		unzipDirectory.mkdirs();
 		
 		// Try with resources to load zip stream, etc.
-		try(FileInputStream inputStream = new FileInputStream(zippedFile);
-			ZipInputStream zipInputStream = new ZipInputStream(inputStream))
+		try(ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(zippedFile)))
 		{
 			ZipEntry entry;
 						
@@ -78,8 +77,7 @@ public class ZippingUtils
 				zipLogger.finer("Writing " + entryFileName + " to uncompressed file " + entryOutputFile);
 				
 				// Another try with resources, this time to write the contents of the entry file.
-				try(FileOutputStream entryOutputStream = new FileOutputStream(entryOutputFile);
-					BufferedOutputStream entryOutputStreamBuffer = new BufferedOutputStream(entryOutputStream))
+				try(BufferedOutputStream entryOutputStreamBuffer = new BufferedOutputStream(new FileOutputStream(entryOutputFile)))
 				{
 					int bufferSize = 1024;
 					byte[] buffer = new byte[bufferSize];
@@ -93,4 +91,12 @@ public class ZippingUtils
 			}
 		}
 	}
+	
+	//TODO: zipFiles(File outputFile, File directoryToZip)
+	
+	//TODO: zipFiles(File outputFile, File...listFiles)
+	
+	//TODO: zipFiles(File outputFile, Container<File> files)
+	
+	//TODO: zipFiles(File outputFile, Container<File[]> files)
 }

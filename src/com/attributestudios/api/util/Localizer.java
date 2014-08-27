@@ -28,21 +28,22 @@ import com.attributestudios.api.util.logging.SimpleLogFormatter;
  * 	are designated by '<code>;</code>' or '<code>#</code>' at the beginning of
  * 	the line.  Note that comments may not appear on the same
  * 	line as a name / value pair.  '\' is used to escape {@linkplain
- *  ConfigurationLoader#allowedCharacters special characters}. 
+ *  ConfigurationLoader#escapedCharacters special characters}. 
  *  Lines should be delimited by the CR/LF (windows) line endings.
  *  They are virtually identical to .properties files.
  * 
  * @author  Bridger Maskrey (maskreybe@live.com)
- * @version 1.0.0
+ * @version 1.1.0
  * @date.   2014-08-12
  */
 public class Localizer extends ConfigurationLoader
 {	
 	/**
 	 * A map of initialized localizations, populated when the {@link #initialize()} 
-	 * 	method is invoked on an instantiated localizer.  Localizers in this hash map
-	 *  are defined via their {@link Localizer#languageID} field, and can be accessed
-	 *  thusly via the {@link #getLocale(String)} method.
+	 * 	   method is invoked on an instantiated localizer.  Localizers in this hash map
+	 *     are defined via their {@link Localizer#languageID} field, and can be accessed
+	 *     thusly via the {@link #getLocale(String)} method.
+	 * @since 1.0.0
 	 */
 	private static HashMap<String, Localizer> registeredLocalizers = new HashMap<String, Localizer>();
 	
@@ -53,7 +54,7 @@ public class Localizer extends ConfigurationLoader
 	
 	/**
 	 * Constructs a new Localizer.  This localizer reads in tags from the
-	 * 	specified language properties file
+	 * 	   specified language properties file
 	 * 
 	 * @param fileStream The stream from which to read the input lang file.
 	 * @param languageID The W3 standard language ID used to identify this
@@ -71,7 +72,9 @@ public class Localizer extends ConfigurationLoader
 	
 	/**
 	 * Sets up the localizer by reading in all of the name / value pairs
-	 * 	present in the file represented in the input stream.
+	 * 	   present in the file represented in the input stream.
+	 * @return Whether or not the initialization was successful.
+	 * @since 1.1.0
 	 */
 	public boolean  initialize()
 	{
@@ -88,10 +91,12 @@ public class Localizer extends ConfigurationLoader
 
 	/**
 	 * Translates an unlocalized value into the localized alternative stored in the
-	 * 	locale's dictionary.
+	 * 	   locale's dictionary.
 	 * @param unlocalizedKey The unlocalized name of the key.  If the locale is uninitialized or
-	 * 			if the key is not extant in the dictionary, then the key is returned unlocalized.
+	 * 			   if the key is not extant in the dictionary, then the key is returned unlocalized.
 	 * @return The localized version of the unlocalized key.
+	 * @since 1.0.0
+	 * @see #getValue(String, String) The string value translation function from ConfigurationLoader.
 	 */
 	public String localize(String unlocalizedKey)
 	{
@@ -105,8 +110,9 @@ public class Localizer extends ConfigurationLoader
 	/**
 	 * Returns a locale via the language ID string it was registered with.
 	 * @param languageID The W3 standard language tag supplied when the
-	 * 			locale was instantiated.
+	 * 			   locale was instantiated.
 	 * @return The Localizer object stored with the specified language ID.
+	 * @since 1.0.0
 	 */
 	public static Localizer getLocale(String languageID)
 	{
