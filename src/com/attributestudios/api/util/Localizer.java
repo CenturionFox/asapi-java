@@ -102,7 +102,7 @@ public class Localizer extends ConfigurationLoader
 	{
 		String localized = super.getValue(unlocalizedKey, unlocalizedKey);
 		
-		this.genericLogger.fine("Localizing key " + unlocalizedKey + " as " + localized);
+		this.genericLogger.finest("Localizing key " + unlocalizedKey + " as " + localized);
 		
 		return localized;
 	}
