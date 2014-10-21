@@ -15,6 +15,7 @@ public class JImagePane extends JComponent
 	private Point2D imageSize;
 	
 	protected BufferedImage theImage;
+	private String	text;
 	
 	public JImagePane(BufferedImage image)
 	{
@@ -42,8 +43,9 @@ public class JImagePane extends JComponent
 	
 	@Override
 	public synchronized void paint(Graphics g)
-	{
-		super.paint(g);
+	{		
+		g.setColor(this.getBackground());
+		g.fillRect(this.getX(), this.getY(), this.getWidth(), this.getHeight());
 		
 		float xRatio = (float) (this.getWidth() / this.imageSize.getX());
 		float yRatio = (float) (this.getHeight() / this.imageSize.getY());
@@ -65,5 +67,26 @@ public class JImagePane extends JComponent
 		int diffSizeY = (int)((this.getHeight() - newHeight) * 0.5F);
 		
 		g.drawImage(this.theImage, diffSizeX, diffSizeY, newWidth, newHeight, this);
+		
+		if(this.getBorder() != null)
+		{
+			this.getBorder().paintBorder(this, g, this.getX(), this.getY(), this.getWidth(), this.getHeight());
+		}
+		
+		if(this.getText() != null)
+		{
+			g.setColor(this.getForeground());
+			g.drawString(this.getText(), this.getWidth() / 2 - (g.getFontMetrics().stringWidth(this.getText()) / 2), this.getHeight() / 2 - (g.getFontMetrics().getHeight() / 2));
+		}
+	}
+	
+	public String getText()
+	{
+		return this.text;
+	}
+	
+	public void setText(String text)
+	{
+		this.text = text;
 	}
 }
