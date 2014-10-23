@@ -12,137 +12,296 @@ import javax.swing.JComponent;
 import javax.swing.SwingConstants;
 
 /**
+ * Swing component used to display an image and an optional caption.
+ * Has functionality allowing it to align the caption in a multitude of
+ * 	fashions and display the image with or without aspect ratio alignment /
+ * 	with or without scaling.
+ * 
  * @author Bridger Maskrey (maskreybe@live.com)
- * @version 2014-10-23
+ * @version 1.3.0 (2014-10-23)
  */
 public class JImagePane extends JComponent
 {
-	private static final long	serialVersionUID	= 5437939503106455141L;
+	/**
+	 * Version ID of this bean.
+	 */
+	private static final long	serialVersionUID	= 130L;
+	
+	/**
+	 * Lock object used to synchronize access to certain values across threads.
+	 */
 	private final Object lock = new Object();
 	
+	/**
+	 * The size of the image object.
+	 */
 	private Point2D imageSize;
 	
-	protected BufferedImage image;
-	private String	text;
+	/**
+	 * The image to display in the image pane.
+	 */
+	private BufferedImage image;
 	
+	/**
+	 * The text caption to display on the image.
+	 */
+	private String text;
+	
+	/**
+	 * The horizontal alignment of the text caption.
+	 * Valid values include:
+	 * 	CENTER:   Centers the text horizontally on-screen
+	 * 	LEFT:	  Draws the text left-aligned on the image
+	 * 	RIGHT:	  Draws the text right-aligned on the image.
+	 * 	LEADING:  See LEFT.
+	 * 	TRAILING: See RIGHT.
+	 */
 	private int horizontalAlignment;
+	
+	/**
+	 * The vertical alignment of the text caption.
+	 * Valid values include:
+	 * 	CENTER:	Centers the text horizontally on-screen.
+	 * 	TOP:	Draws the text at the top of the component or image.
+	 * 	BOTTOM:	Draws the text at the bottom of the component or image.
+	 */
 	private int verticalAlignment;
 	
-	private boolean textBackground;
+	/**
+	 * Determines whether a rectangle is drawn behind the text to 
+	 * 	separate it from the image colors that it may be easier to
+	 * 	read.
+	 */
+	private boolean textBackgroundDrawn;
+	
+	/**
+	 * What color the text background should be drawn as (by default is
+	 * 	equivalent to the actual background color).
+	 */
 	private Color textBackgroundColor;
 	
-	private boolean preserveAspectRatio;
+	/**
+	 * Determines whether or not the aspect ratio of the image is preserved.
+	 */
+	private boolean aspectRatioPreserved;
 	
+	/**
+	 * Determines whether text is positioned relative to the bottom of the
+	 * 	component or the bottom of the displayed image.  If aspect ratio is
+	 * 	not preserved, these values are equivalent. However, if aspect ratio
+	 * 	is preserved, this is required to 
+	 */
+	private boolean textRelativeToImage;
+	
+	private boolean imageScalingOn;
+	
+	/**
+	 * Creates a new JImagePane with the specified image.
+	 * @param image A BufferedImage to display on the image pane.
+	 */
 	public JImagePane(BufferedImage image)
 	{
-		super();
+		this();
+		
 		this.setImage(image);
+	}
+	
+	/**
+	 * Creates a new JImagePane with no image.
+	 */
+	public JImagePane()
+	{
+		super();
+		
+		this.setImage(null);
 		
 		this.setVerticalAlignment(SwingConstants.CENTER);
 		this.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		this.setTextBackgroundColor(Color.BLACK);
 		
-		this.setPreserveAspectRatio(true);
-		
 		this.setTextBackgroundColor(this.getBackground());
+		this.setAspectRatioPreserved(true);
+		this.setImageScalingOn(true);
 	}
 	
+	public synchronized BufferedImage getImage()
+	{
+		return this.image;
+	}
+	
+	public String getText()
+	{
+		return this.text;
+	}
+
+	public int getHorizontalAlignment()
+	{
+		return this.horizontalAlignment;
+	}
+
+	public int getVerticalAlignment()
+	{
+		return this.verticalAlignment;
+	}
+
+	public boolean isTextBackgroundDrawn()
+	{
+		return this.textBackgroundDrawn;
+	}
+
+	public Color getTextBackgroundColor()
+	{
+		return this.textBackgroundColor;
+	}
+
+	public boolean isAspectRatioPreserved()
+	{
+		return this.aspectRatioPreserved;
+	}
+
+	public boolean isTextRelativeToImage()
+	{
+		return this.textRelativeToImage;
+	}
+
+	public boolean isImageScalingOn()
+	{
+		return this.imageScalingOn;
+	}
+	
+	public Point2D getImageSize()
+	{
+		return this.imageSize;
+	}
+
 	public void setImage(BufferedImage image)
 	{
 		synchronized(this.lock)
 		{
 			this.image = image;
 			
-			if(this.image != null)
+			if(this.getImage() != null)
 			{
-				this.imageSize = new Point(this.image.getWidth(), this.image.getHeight());
+				this.setImageSize(new Point(this.getImage().getWidth(), this.getImage().getHeight()));
 			} else
 			{
-				this.imageSize = new Point(1, 1);
+				this.setImageSize(new Point(1, 1));
 			}
 		}
 		
 		this.repaint();
 	}
-	
-	public BufferedImage getImage()
+
+	public void setText(String text)
 	{
-		return this.image;
+		this.text = text;
 	}
-	
-	public void setTextBackground(boolean textBackground)
+
+	public void setHorizontalAlignment(int horizontalAlignment)
 	{
-		this.textBackground = textBackground;
+		this.horizontalAlignment = horizontalAlignment;
 	}
-	
-	public boolean getTextBackground()
+
+	public void setVerticalAlignment(int verticalAlignment)
 	{
-		return this.textBackground;
+		this.verticalAlignment = verticalAlignment;
 	}
-	
-	public void setVerticalAlignment(int alignment)
+
+	public void setTextBackgroundDrawn(boolean textBackgroundDrawn)
 	{
-		this.verticalAlignment = alignment;
+		this.textBackgroundDrawn = textBackgroundDrawn;
 	}
-	
-	public int getVerticalAlignment()
+
+	public void setTextBackgroundColor(Color textBackgroundColor)
 	{
-		return this.verticalAlignment;
+		this.textBackgroundColor = textBackgroundColor;
 	}
-	
-	public void setHorizontalAlignment(int alignment)
+
+	public void setAspectRatioPreserved(boolean aspectRatioPreserved)
 	{
-		this.horizontalAlignment = alignment;
+		this.aspectRatioPreserved = aspectRatioPreserved;
 	}
-	
-	public int getHorizontalAlignment()
+
+	public void setTextRelativeToImage(boolean textRelativeToImage)
 	{
-		return this.horizontalAlignment;
+		this.textRelativeToImage = textRelativeToImage;
 	}
-	
+
+	public void setImageScalingOn(boolean imageScalingOn)
+	{
+		this.imageScalingOn = imageScalingOn;
+	}
+
+	private void setImageSize(Point2D imageSize)
+	{
+		this.imageSize = imageSize;
+	}
+
+	/* (non-Javadoc)
+	 * @see javax.swing.JComponent#paint(java.awt.Graphics)
+	 * 
+	 * Draws the JImagePane background, image (with / without scaling, etc)
+	 */
 	@Override
 	public synchronized void paint(Graphics g)
-	{		
+	{	
+		// Cast graphics down to Graphics2D.
 		Graphics2D g2d = (Graphics2D)g;
 		
+		// Enable antialiasing.
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
+		// Draw background
 		g2d.setColor(this.getBackground());
 		g2d.fillRect(this.getX(), this.getY(), this.getWidth(), this.getHeight());
 		
-		float xRatio = (float) (this.getWidth() / this.imageSize.getX());
-		float yRatio = (float) (this.getHeight() / this.imageSize.getY());
 		
-		int newWidth, newHeight, diffSizeX, diffSizeY;
 		
 		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 		
-		if(this.preserveAspectRatio)
+		int newWidth, newHeight, diffSizeX, diffSizeY;
+		
+		// Begin drawing the image.
+		
+		if(this.isImageScalingOn())
 		{
-			if(xRatio > yRatio)
+			if(this.isAspectRatioPreserved())
 			{
-				newWidth = (int)(this.imageSize.getX() * yRatio);
-				newHeight = (int)(this.imageSize.getY() * yRatio);
+				float xRatio = (float) (this.getWidth() / this.getImageSize().getX());
+				float yRatio = (float) (this.getHeight() / this.getImageSize().getY());
+				
+				if(xRatio > yRatio)
+				{
+					newWidth = (int)(this.getImageSize().getX() * yRatio);
+					newHeight = (int)(this.getImageSize().getY() * yRatio);
+				}
+				else
+				{
+					newWidth = (int)(this.getImageSize().getX() * xRatio);
+					newHeight = (int)(this.getImageSize().getY() * xRatio);
+				}
+				
+				diffSizeX = (int)((this.getWidth() - newWidth) * 0.5F);
+				diffSizeY = (int)((this.getHeight() - newHeight) * 0.5F);
 			}
 			else
 			{
-				newWidth = (int)(this.imageSize.getX() * xRatio);
-				newHeight = (int)(this.imageSize.getY() * xRatio);
+				newWidth = this.getWidth();
+				newHeight = this.getHeight();
+				
+				diffSizeX = diffSizeY = 0;
 			}
-			
-			diffSizeX = (int)((this.getWidth() - newWidth) * 0.5F);
-			diffSizeY = (int)((this.getHeight() - newHeight) * 0.5F);
 		}
 		else
 		{
-			newWidth = this.getWidth();
-			newHeight = this.getHeight();
-			
-			diffSizeX = diffSizeY = 0;
+			newWidth = (int) this.getImageSize().getX();
+			newHeight = (int) this.getImageSize().getY();
+			diffSizeX = (int)((this.getWidth() - newWidth) * 0.5F);
+			diffSizeY = (int)((this.getHeight() - newHeight) * 0.5F);
 		}
 		
-		g2d.drawImage(this.image, diffSizeX, diffSizeY, newWidth, newHeight, this);
+		g2d.drawImage(this.getImage(), diffSizeX, diffSizeY, newWidth, newHeight, this);
 		
 		if(this.getBorder() != null)
 		{
@@ -151,44 +310,58 @@ public class JImagePane extends JComponent
 		
 		if(this.getText() != null && !this.getText().isEmpty())
 		{
-			int textX;
-			int textY;
+			int textX, textY, startTextX, startTextY, xOffset, yOffset;
+			
+			if(this.isTextRelativeToImage())
+			{
+				startTextX = newWidth;
+				startTextY = newHeight;
+				xOffset = diffSizeX;
+				yOffset = diffSizeY;
+			}
+			else
+			{
+				startTextX = this.getWidth();
+				startTextY = this.getHeight();
+				xOffset = 0;
+				yOffset = 0;
+			}
 			
 			switch(this.horizontalAlignment)
 			{
 			case SwingConstants.CENTER:
-				textX = newWidth / 2 - (g2d.getFontMetrics().stringWidth(this.getText()) / 2) + diffSizeX;
+				textX = startTextX / 2 - (g2d.getFontMetrics().stringWidth(this.getText()) / 2) + xOffset;
 				break;
 				
 			case SwingConstants.TRAILING:
 			case SwingConstants.RIGHT:
-				textX = newWidth - g2d.getFontMetrics().stringWidth(this.getText()) + diffSizeX;
+				textX = startTextX - g2d.getFontMetrics().stringWidth(this.getText()) + xOffset;
 				break;
 				
 			case SwingConstants.LEADING:
 			case SwingConstants.LEFT:
 			default:
-				textX = diffSizeX;
+				textX = xOffset;
 				break;
 			}
 			
 			switch(this.verticalAlignment)
 			{
 			case SwingConstants.BOTTOM:
-				textY = newHeight - g2d.getFontMetrics().getHeight() - g2d.getFontMetrics().getLeading() + diffSizeY;
+				textY = startTextY - g2d.getFontMetrics().getHeight() - g2d.getFontMetrics().getLeading() + yOffset;
 				break;
 			
 			case SwingConstants.CENTER:
-				textY = newHeight / 2 - (g2d.getFontMetrics().getHeight() / 2) + diffSizeY;
+				textY = startTextY / 2 - (g2d.getFontMetrics().getHeight() / 2) + yOffset;
 				break;
 			
 			case SwingConstants.TOP:
 			default:
-				textY = g.getFontMetrics().getLeading() + diffSizeY;
+				textY = g.getFontMetrics().getLeading() + yOffset;
 				break;
 			}
 			
-			if(this.textBackground)
+			if(this.textBackgroundDrawn)
 			{
 				g2d.setColor(this.textBackgroundColor);
 				
@@ -204,35 +377,5 @@ public class JImagePane extends JComponent
 			
 			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 		}
-	}
-	
-	public String getText()
-	{
-		return this.text;
-	}
-	
-	public void setText(String text)
-	{
-		this.text = text;
-	}
-
-	public Color getTextBackgroundColor()
-	{
-		return this.textBackgroundColor;
-	}
-
-	public void setTextBackgroundColor(Color textBackgroundColor)
-	{
-		this.textBackgroundColor = textBackgroundColor;
-	}
-
-	public boolean getPreserveAspectRatio()
-	{
-		return this.preserveAspectRatio;
-	}
-
-	public void setPreserveAspectRatio(boolean preserveAspectRatio)
-	{
-		this.preserveAspectRatio = preserveAspectRatio;
 	}
 }
