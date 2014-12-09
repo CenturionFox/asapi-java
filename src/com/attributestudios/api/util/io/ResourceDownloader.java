@@ -72,7 +72,7 @@ public class ResourceDownloader
 			FileOutputStream output = new FileOutputStream(downloadedLocation);
 			BufferedOutputStream out = new BufferedOutputStream(output))
 		{
-			int bufferSize = 1024;
+			int bufferSize = 1024; //TODO: Make this alterable
 			byte[] buffer = new byte[bufferSize];
 			
 			int read;
