@@ -119,7 +119,7 @@ public class HashUtils
 		{
 			LoggingUtil.writeStackTraceToLogger(hashLog, 
 												e,
-												"Hashing as " + hashType.hashType + " failed: ",
+												"Hashing as " + hashType.getHashType() + " failed: ",
 												Level.SEVERE);
 		}
 		
@@ -156,13 +156,20 @@ public class HashUtils
 	{
 		/**
 		 * Represents the MessageDigest 5 hashing algorithm.
+		 * It is preferable to not use this hash at all, except for
+		 * 	download hash checks, as this algorithm is not collision
+		 * 	resistant.
 		 * @since 1.0.0
 		 */
+		@Deprecated
 		MD5("MD5"),
 		/**
 		 * Represents the Secure Hashing Algorithm 1 hashing algorithm.
+		 * Do not use for secure applications, such as password storage,
+		 * 	as this algorithm is not highly collision resistant.
 		 * @since 1.0.0
 		 */
+		@Deprecated
 		SHA1("SHA-1"),
 		/**
 		 * Represents the Secure Hashing Algorithm 256 hashing algorithm.
