@@ -92,13 +92,26 @@ public class Localizer extends Properties
 	 * @since 1.0.0
 	 * @see #getValue(String, String) The string value translation function from ConfigurationLoader.
 	 */
-	public String localize(String unlocalizedKey)
+	@Override
+	public String getProperty(String unlocalizedKey)
 	{
-		String localized = super.getProperty(unlocalizedKey, unlocalizedKey);
+		return this.getProperty(unlocalizedKey, unlocalizedKey);
+	}
+	
+	@Override
+	public String getProperty(String unlocalizedKey, String defaultValue)
+	{
+		String localized = super.getProperty(unlocalizedKey, defaultValue);
 		
 		this.genericLogger.finest("Localizing key " + unlocalizedKey + " as " + localized);
 		
 		return localized;
+	}
+	
+	@Deprecated
+	public String localize(String unlocalizedKey)
+	{
+		return this.getProperty(unlocalizedKey);
 	}
 	
 	/**
