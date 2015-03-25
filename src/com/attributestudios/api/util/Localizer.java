@@ -3,9 +3,11 @@
  */
 package com.attributestudios.api.util;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.logging.Logger;
+import java.util.Properties;
 
 import com.attributestudios.api.util.logging.LoggingUtil;
 import com.attributestudios.api.util.logging.SimpleLogFormatter;
@@ -36,8 +38,10 @@ import com.attributestudios.api.util.logging.SimpleLogFormatter;
  * @version 1.1.0
  * @date.   2014-08-12
  */
-public class Localizer extends ConfigurationLoader
+public class Localizer extends Properties
 {	
+	private static final long serialVersionUID = 8681727683816048138L;
+	
 	/**
 	 * A map of initialized localizations, populated when the {@link #initialize()} 
 	 * 	   method is invoked on an instantiated localizer.  Localizers in this hash map
@@ -46,6 +50,9 @@ public class Localizer extends ConfigurationLoader
 	 * @since 1.0.0
 	 */
 	private static HashMap<String, Localizer> registeredLocalizers = new HashMap<String, Localizer>();
+	public Logger genericLogger;
+	
+	private InputStream fileStream;
 	
 	/**
 	 * The ID of the localizer language.
@@ -60,33 +67,22 @@ public class Localizer extends ConfigurationLoader
 	 * @param languageID The W3 standard language ID used to identify this
 	 * 		localization file.
 	 */
-	public Localizer(InputStream fileStream, String languageID)
+	public Localizer(String languageID)
 	{
 		// Set up stream and language tag properties
-		super(fileStream);
+		super();
 		
 		this.languageID = languageID;
 		
 		this.genericLogger = LoggingUtil.constructLogger("Localization", new SimpleLogFormatter());
 	}
 	
-	/**
-	 * Sets up the localizer by reading in all of the name / value pairs
-	 * 	   present in the file represented in the input stream.
-	 * @return Whether or not the initialization was successful.
-	 * @since 1.1.0
-	 */
-	public boolean initialize()
+	@Override
+	public void load(InputStream inStream) throws IOException
 	{
-		boolean flag = super.initialize();
+		super.load(inStream);
 		
-		// Only set if the thing doesn't fail.
-		if(flag)
-		{
-			registeredLocalizers.put(this.languageID, this);
-		}
-		
-		return flag;
+		Localizer.registeredLocalizers.put(this.languageID, this);
 	}
 
 	/**
@@ -100,7 +96,7 @@ public class Localizer extends ConfigurationLoader
 	 */
 	public String localize(String unlocalizedKey)
 	{
-		String localized = super.getValue(unlocalizedKey, unlocalizedKey);
+		String localized = super.getProperty(unlocalizedKey, unlocalizedKey);
 		
 		this.genericLogger.finest("Localizing key " + unlocalizedKey + " as " + localized);
 		
