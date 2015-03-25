@@ -52,8 +52,6 @@ public class Localizer extends Properties
 	private static HashMap<String, Localizer> registeredLocalizers = new HashMap<String, Localizer>();
 	public Logger genericLogger;
 	
-	private InputStream fileStream;
-	
 	/**
 	 * The ID of the localizer language.
 	 */
