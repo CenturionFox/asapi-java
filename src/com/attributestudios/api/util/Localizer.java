@@ -83,30 +83,30 @@ public class Localizer extends Properties
 		Localizer.registeredLocalizers.put(this.languageID, this);
 	}
 
-	/**
-	 * Translates an unlocalized value into the localized alternative stored in the
-	 * 	   locale's dictionary.
-	 * @param unlocalizedKey The unlocalized name of the key.  If the locale is uninitialized or
-	 * 			   if the key is not extant in the dictionary, then the key is returned unlocalized.
-	 * @return The localized version of the unlocalized key.
-	 * @since 1.0.0
-	 * @see #getValue(String, String) The string value translation function from ConfigurationLoader.
-	 */
-	@Override
-	public String getProperty(String unlocalizedKey)
-	{
-		return this.getProperty(unlocalizedKey, unlocalizedKey);
-	}
-	
-	@Override
-	public String getProperty(String unlocalizedKey, String defaultValue)
-	{
-		String localized = super.getProperty(unlocalizedKey, defaultValue);
-		
-		this.genericLogger.finest("Localizing key " + unlocalizedKey + " as " + localized);
-		
-		return localized;
-	}
+//	/**
+//	 * Translates an unlocalized value into the localized alternative stored in the
+//	 * 	   locale's dictionary.
+//	 * @param unlocalizedKey The unlocalized name of the key.  If the locale is uninitialized or
+//	 * 			   if the key is not extant in the dictionary, then the key is returned unlocalized.
+//	 * @return The localized version of the unlocalized key.
+//	 * @since 1.0.0
+//	 * @see #getValue(String, String) The string value translation function from ConfigurationLoader.
+//	 */
+//	@Override
+//	public String getProperty(String unlocalizedKey)
+//	{
+//		return this.getProperty(unlocalizedKey, unlocalizedKey);
+//	}
+//	
+//	@Override
+//	public String getProperty(String unlocalizedKey, String defaultValue)
+//	{
+//		String localized = super.getProperty(unlocalizedKey, defaultValue);
+//		
+//		this.genericLogger.finest("Localizing key " + unlocalizedKey + " as " + localized);
+//		
+//		return localized;
+//	}
 	
 	@Deprecated
 	public String localize(String unlocalizedKey)

@@ -125,41 +125,77 @@ public class JImagePane extends JComponent
 		this.setImageScalingOn(true);
 	}
 	
+	/**
+	 * Gets the component's image.
+	 * @return The image to be displayed on this component.
+	 */
 	public synchronized BufferedImage getImage()
 	{
 		return this.image;
 	}
 	
+	/**
+	 * Gets the text to display on the component.
+	 * @return The text to be displayed on the component.
+	 */
 	public String getText()
 	{
 		return this.text;
 	}
 
+	/**
+	 * Gets the horizontal alignment of the text caption.
+	 * @return The horizontal alignemnt of the text caption.
+	 */
 	public int getHorizontalAlignment()
 	{
 		return this.horizontalAlignment;
 	}
 
+	/**
+	 * Gets the vertical alignment of the text caption.
+	 * @return The vertical alignment of the text caption.
+	 */
 	public int getVerticalAlignment()
 	{
 		return this.verticalAlignment;
 	}
 
+	/**
+	 * Used to determmine whether or not to draw a rectangular fill behind 
+	 * the text to increase visibility.
+	 * @return True if the visibility-enhancing background should be drawn.
+	 */
 	public boolean isTextBackgroundDrawn()
 	{
 		return this.textBackgroundDrawn;
 	}
 
+	/**
+	 * Gets the color of the text fill.
+	 * @return The background's fill color.
+	 */
 	public Color getTextBackgroundColor()
 	{
 		return this.textBackgroundColor;
 	}
 
+	/**
+	 * Used to determine whether the image should scale directly with the
+	 * component or if it should maintain its current aspect ratio when
+	 * scaling.
+	 * @return True if the image should maintain its aspect ratio when scaling.
+	 */
 	public boolean isAspectRatioPreserved()
 	{
 		return this.aspectRatioPreserved;
 	}
 
+	/**
+	 * Used to determine whether or not the caption text should be rendered relative
+	 * to the bottom edge of the component or the bottom edge of the picture.
+	 * @return True if the caption text renders relative to the picture.
+	 */
 	public boolean isTextRelativeToImage()
 	{
 		return this.textRelativeToImage;
@@ -257,7 +293,7 @@ public class JImagePane extends JComponent
 		g2d.fillRect(this.getX(), this.getY(), this.getWidth(), this.getHeight());
 		
 		
-		
+		// Set up scaling interpolation.
 		g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 		
 		int newWidth, newHeight, diffSizeX, diffSizeY;
@@ -268,6 +304,7 @@ public class JImagePane extends JComponent
 		{
 			if(this.isAspectRatioPreserved())
 			{
+				// Perform aspect ratio preservation algorithms
 				float xRatio = (float) (this.getWidth() / this.getImageSize().getX());
 				float yRatio = (float) (this.getHeight() / this.getImageSize().getY());
 				
@@ -287,6 +324,7 @@ public class JImagePane extends JComponent
 			}
 			else
 			{
+				// Size image directly to container.
 				newWidth = this.getWidth();
 				newHeight = this.getHeight();
 				
@@ -295,19 +333,23 @@ public class JImagePane extends JComponent
 		}
 		else
 		{
+			// Reposition image but do not scale.
 			newWidth = (int) this.getImageSize().getX();
 			newHeight = (int) this.getImageSize().getY();
 			diffSizeX = (int)((this.getWidth() - newWidth) * 0.5F);
 			diffSizeY = (int)((this.getHeight() - newHeight) * 0.5F);
 		}
 		
+		// Draw the image with scaling and/or repositioning.
 		g2d.drawImage(this.getImage(), diffSizeX, diffSizeY, newWidth, newHeight, this);
 		
+		// Draw the component's border (if present).
 		if(this.getBorder() != null)
 		{
 			this.getBorder().paintBorder(this, g, this.getX(), this.getY(), this.getWidth(), this.getHeight());
 		}
 		
+		// Draw the component's caption text.
 		if(this.getText() != null && !this.getText().isEmpty())
 		{
 			int textX, textY, startTextX, startTextY, xOffset, yOffset;
@@ -327,6 +369,7 @@ public class JImagePane extends JComponent
 				yOffset = 0;
 			}
 			
+			// Align text as desired.
 			switch(this.horizontalAlignment)
 			{
 			case SwingConstants.CENTER:
@@ -361,6 +404,7 @@ public class JImagePane extends JComponent
 				break;
 			}
 			
+			// Draw background of text if necessary.
 			if(this.textBackgroundDrawn)
 			{
 				g2d.setColor(this.textBackgroundColor);
@@ -375,6 +419,7 @@ public class JImagePane extends JComponent
 			
 			g2d.drawString(this.getText(), textX, textY);
 			
+			// Return graphics settings to default.
 			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 		}
 	}
